@@ -15,7 +15,11 @@ void ObjHsblock_Destroy(Actor* thisx, GlobalContext* globalCtx);
 void ObjHsblock_Update(Actor* thisx, GlobalContext* globalCtx);
 void ObjHsblock_Draw(Actor* thisx, GlobalContext* globalCtx);
 
+void func_8093E03C(ObjHsblock* this);
+void func_8093E05C(ObjHsblock* this);
 void func_8093E0A0(ObjHsblock* this, GlobalContext* globalCtx);
+void func_8093E0E8(ObjHsblock* this);
+void func_8093E10C(ObjHsblock* this, GlobalContext* globalCtx);
 
 void ObjHsblock_SetupAction(ObjHsblock* this, ObjHsblockActionFunc actionFunc);
 
@@ -101,15 +105,36 @@ void ObjHsblock_Destroy(Actor* thisx, GlobalContext* globalCtx) {
     DynaPoly_DeleteBgActor(globalCtx, &globalCtx->colCtx.dyna, this->dyna.bgId);
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/func_8093E03C.s")
+void func_8093E03C(ObjHsblock* this) {
+    ObjHsblock_SetupAction(this, NULL);
+}
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/func_8093E05C.s")
+void func_8093E05C(ObjHsblock* this) {
+    this->dyna.actor.flags |= 0x10;
+    this->dyna.actor.world.pos.y = this->dyna.actor.home.pos.y - 105.0f;
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/func_8093E0A0.s")
+    ObjHsblock_SetupAction(this, func_8093E0A0);
+}
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/func_8093E0E8.s")
+void func_8093E0A0(ObjHsblock* this, GlobalContext* globalCtx) {
+    if (Flags_GetSwitch(globalCtx, OBJHSBLOCK_GET_7F00(this))) {
+        func_8093E0E8(this);
+    }
+}
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/func_8093E10C.s")
+void func_8093E0E8(ObjHsblock* this) {
+    ObjHsblock_SetupAction(this, func_8093E10C);
+}
+
+void func_8093E10C(ObjHsblock* this, GlobalContext* globalCtx) {
+    Math_SmoothStepToF(&this->dyna.actor.velocity.y, 16.0f, 0.1f, 0.8f, 0.0f);
+
+    if (fabsf(Math_SmoothStepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y, 0.3f, this->dyna.actor.velocity.y, 0.3f)) < 0.001f) {
+        this->dyna.actor.world.pos.y = this->dyna.actor.home.pos.y;
+        func_8093E03C(this);
+        this->dyna.actor.flags &= ~0x10;
+    }
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/ObjHsblock_Update.s")
 
