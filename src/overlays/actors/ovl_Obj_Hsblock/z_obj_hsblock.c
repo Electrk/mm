@@ -46,9 +46,25 @@ UNK_TYPE D_8093E364[] = { 0x3C3C7878, 0x64466496, 0x78FFFFFF };
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/ObjHsblock_SetupAction.s")
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/func_8093DEAC.s")
+void func_8093DEAC(ObjHsblock* this, GlobalContext* globalCtx) {
+    if (OBJHSBLOCK_GET_20(this)) {
+        Actor_SpawnAsChild(
+            &globalCtx->actorCtx,
+            &this->dyna.actor,
+            globalCtx,
+            ACTOR_OBJ_ICE_POLY,
+            this->dyna.actor.world.pos.x,
+            this->dyna.actor.world.pos.y,
+            this->dyna.actor.world.pos.z,
+            this->dyna.actor.world.rot.x,
+            this->dyna.actor.world.rot.y,
+            this->dyna.actor.world.rot.z,
+            0xFF64
+        );
+    }
+}
 
-void ObjHsblock_Init(Actor *thisx, GlobalContext *globalCtx) {
+void ObjHsblock_Init(Actor* thisx, GlobalContext* globalCtx) {
     ObjHsblock* this = THIS;
 
     DynaPolyActor_Init(&this->dyna, 0);
@@ -67,7 +83,7 @@ void ObjHsblock_Init(Actor *thisx, GlobalContext *globalCtx) {
             break;
 
         case 1:
-            if (Flags_GetSwitch(globalCtx, OBJHSBLOCK_GET_7F00(this)) != 0) {
+            if (Flags_GetSwitch(globalCtx, OBJHSBLOCK_GET_7F00(this))) {
                 func_8093E03C(this);
                 return;
             }
