@@ -7,8 +7,11 @@ struct ObjHsblock;
 
 typedef void (*ObjHsblockActionFunc)(struct ObjHsblock*, GlobalContext*);
 
+#define OBJHSBLOCK_GET_3(thisx) ((thisx)->dyna.actor.params & 3)
+#define OBJHSBLOCK_GET_7F00(thisx) (((thisx)->dyna.actor.params >> 8) & 0x7F)
+
 typedef struct ObjHsblock {
-    /* 0x0000 */ Actor actor;
+    /* 0x0000 */ DynaPolyActor dyna;
     /* 0x0144 */ char unk_144[0x18];
     /* 0x015C */ ObjHsblockActionFunc actionFunc;
 } ObjHsblock; // size = 0x160
