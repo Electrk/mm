@@ -10,14 +10,12 @@
 
 #define THIS ((ObjHsblock*)thisx)
 
-void ObjHsblock_SetupAction(ObjHsblock* this, ObjHsblockActionFunc actionFunc);
-void func_8093DEAC(ObjHsblock* this, GlobalContext* globalCtx);
-
 void ObjHsblock_Init(Actor* thisx, GlobalContext* globalCtx);
 void ObjHsblock_Destroy(Actor* thisx, GlobalContext* globalCtx);
 void ObjHsblock_Update(Actor* thisx, GlobalContext* globalCtx);
 void ObjHsblock_Draw(Actor* thisx, GlobalContext* globalCtx);
 
+void func_8093DEAC(ObjHsblock* this, GlobalContext* globalCtx);
 void func_8093E03C(ObjHsblock* this);
 void func_8093E05C(ObjHsblock* this);
 void func_8093E0A0(ObjHsblock* this, GlobalContext* globalCtx);
@@ -48,8 +46,8 @@ static InitChainEntry D_8093E33C[] = {
 
 f32 D_8093E330[] = { 0x42AA0000, 0x42AA0000, 0x00000000 };
 CollisionHeader* D_8093E34C[] = { 0x06000730, 0x06000730, 0x06000578 };
-UNK_TYPE D_8093E358[] = { 0x06000210, 0x06000210, 0x06000470 };
-UNK_TYPE D_8093E364[] = { 0x3C3C7878, 0x64466496, 0x78FFFFFF };
+Gfx* D_8093E358[] = { 0x06000210, 0x06000210, 0x06000470 };
+Color_RGB8 D_8093E364[] = { 0x3C3C7878, 0x64466496, 0x78FFFFFF };
 
 void ObjHsblock_SetupAction(ObjHsblock* this, ObjHsblockActionFunc actionFunc) {
     this->actionFunc = actionFunc;
@@ -140,7 +138,7 @@ void func_8093E10C(ObjHsblock* this, GlobalContext* globalCtx) {
 }
 
 void ObjHsblock_Update(Actor* thisx, GlobalContext* globalCtx) {
-    ObjHsblock *this = THIS;
+    ObjHsblock* this = THIS;
 
     if (this->actionFunc != NULL) {
         this->actionFunc(this, globalCtx);
@@ -149,4 +147,15 @@ void ObjHsblock_Update(Actor* thisx, GlobalContext* globalCtx) {
     Actor_SetHeight(&this->dyna.actor, D_8093E330[OBJHSBLOCK_GET_3(this)]);
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/ObjHsblock_Draw.s")
+void ObjHsblock_Draw(Actor* thisx, GlobalContext* globalCtx) {
+    Color_RGB8* envColor = &D_8093E364[OBJHSBLOCK_GET_C0(THIS)];
+
+    OPEN_DISPS(globalCtx->state.gfxCtx);
+    func_8012C28C(globalCtx->state.gfxCtx);
+
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(globalCtx->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gDPSetEnvColor(POLY_OPA_DISP++, envColor->r, envColor->g, envColor->b, 255);
+    gSPDisplayList(POLY_OPA_DISP++, D_8093E358[OBJHSBLOCK_GET_3(THIS)]);
+
+    CLOSE_DISPS(globalCtx->state.gfxCtx);
+}

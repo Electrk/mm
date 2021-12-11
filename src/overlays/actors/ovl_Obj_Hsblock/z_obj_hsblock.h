@@ -9,6 +9,7 @@ typedef void (*ObjHsblockActionFunc)(struct ObjHsblock*, GlobalContext*);
 
 #define OBJHSBLOCK_GET_3(thisx) ((thisx)->dyna.actor.params & 3)
 #define OBJHSBLOCK_GET_20(thisx) (((thisx)->dyna.actor.params >> 5) & 1)
+#define OBJHSBLOCK_GET_C0(thisx) (((thisx)->dyna.actor.params >> 6) & 3)
 #define OBJHSBLOCK_GET_7F00(thisx) (((thisx)->dyna.actor.params >> 8) & 0x7F)
 
 typedef struct ObjHsblock {
