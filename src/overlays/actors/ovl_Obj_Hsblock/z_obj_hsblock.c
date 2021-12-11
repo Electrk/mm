@@ -10,6 +10,9 @@
 
 #define THIS ((ObjHsblock*)thisx)
 
+void ObjHsblock_SetupAction(ObjHsblock* this, ObjHsblockActionFunc actionFunc);
+void func_8093DEAC(ObjHsblock* this, GlobalContext* globalCtx);
+
 void ObjHsblock_Init(Actor* thisx, GlobalContext* globalCtx);
 void ObjHsblock_Destroy(Actor* thisx, GlobalContext* globalCtx);
 void ObjHsblock_Update(Actor* thisx, GlobalContext* globalCtx);
@@ -43,7 +46,7 @@ static InitChainEntry D_8093E33C[] = {
     ICHAIN_F32(uncullZoneDownward, 200, ICHAIN_STOP),
 };
 
-UNK_TYPE D_8093E330[] = { 0x42AA0000, 0x42AA0000, 0x00000000 };
+f32 D_8093E330[] = { 0x42AA0000, 0x42AA0000, 0x00000000 };
 CollisionHeader* D_8093E34C[] = { 0x06000730, 0x06000730, 0x06000578 };
 UNK_TYPE D_8093E358[] = { 0x06000210, 0x06000210, 0x06000470 };
 UNK_TYPE D_8093E364[] = { 0x3C3C7878, 0x64466496, 0x78FFFFFF };
@@ -136,6 +139,14 @@ void func_8093E10C(ObjHsblock* this, GlobalContext* globalCtx) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/ObjHsblock_Update.s")
+void ObjHsblock_Update(Actor* thisx, GlobalContext* globalCtx) {
+    ObjHsblock *this = THIS;
+
+    if (this->actionFunc != NULL) {
+        this->actionFunc(this, globalCtx);
+    }
+
+    Actor_SetHeight(&this->dyna.actor, D_8093E330[OBJHSBLOCK_GET_3(this)]);
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/ObjHsblock_Draw.s")
