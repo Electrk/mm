@@ -93,7 +93,11 @@ void ObjHsblock_Init(Actor* thisx, GlobalContext* globalCtx) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/ObjHsblock_Destroy.s")
+void ObjHsblock_Destroy(Actor* thisx, GlobalContext* globalCtx) {
+    ObjHsblock* this = THIS;
+
+    DynaPoly_DeleteBgActor(globalCtx, &globalCtx->colCtx.dyna, this->dyna.bgId);
+}
 
 #pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/func_8093E03C.s")
 
