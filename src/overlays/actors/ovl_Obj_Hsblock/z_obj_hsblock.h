@@ -13,7 +13,6 @@ typedef void (*ObjHsblockActionFunc)(struct ObjHsblock*, GlobalContext*);
 
 typedef struct ObjHsblock {
     /* 0x0000 */ DynaPolyActor dyna;
-    /* 0x0144 */ char unk_144[0x18];
     /* 0x015C */ ObjHsblockActionFunc actionFunc;
 } ObjHsblock; // size = 0x160
 

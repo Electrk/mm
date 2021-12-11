@@ -44,7 +44,9 @@ CollisionHeader* D_8093E34C[] = { 0x06000730, 0x06000730, 0x06000578 };
 UNK_TYPE D_8093E358[] = { 0x06000210, 0x06000210, 0x06000470 };
 UNK_TYPE D_8093E364[] = { 0x3C3C7878, 0x64466496, 0x78FFFFFF };
 
-#pragma GLOBAL_ASM("asm/non_matchings/overlays/ovl_Obj_Hsblock/ObjHsblock_SetupAction.s")
+void ObjHsblock_SetupAction(ObjHsblock* this, ObjHsblockActionFunc actionFunc) {
+    this->actionFunc = actionFunc;
+}
 
 void func_8093DEAC(ObjHsblock* this, GlobalContext* globalCtx) {
     if (OBJHSBLOCK_GET_20(this)) {
